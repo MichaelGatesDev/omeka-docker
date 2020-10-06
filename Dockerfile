@@ -1,4 +1,4 @@
-FROM php:5.6-apache
+FROM php:7.4.0-apache
 
 RUN a2enmod rewrite
 
@@ -9,27 +9,29 @@ RUN apt-get -qq update && apt-get -qq -y --no-install-recommends install \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libmcrypt-dev \
-    libpng12-dev \
+    libpng-dev \
     libjpeg-dev \
     libmemcached-dev \
     zlib1g-dev \
     imagemagick
 
 # install the PHP extensions we need
-RUN docker-php-ext-install -j$(nproc) iconv mcrypt \
+RUN pecl install mcrypt-1.0.3 \
+    && docker-php-ext-enable mcrypt
+RUN docker-php-ext-install -j$(nproc) iconv \
     pdo pdo_mysql mysqli gd
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
 
 RUN docker-php-ext-install exif && \
     docker-php-ext-enable exif
 
 RUN curl -J -L -s -k \
-    'https://github.com/omeka/Omeka/releases/download/v2.5/omeka-2.5.zip' \
+    'https://github.com/omeka/Omeka/releases/download/v2.7.1/omeka-2.7.1.zip' \
     -o /var/www/omeka.zip \
 &&  unzip -q /var/www/omeka.zip -d /var/www/ \
 &&  rm /var/www/omeka.zip \
 &&  rm -rf /var/www/html \
-&&  mv /var/www/omeka-2.5 /var/www/html \
+&&  mv /var/www/omeka-2.7.1 /var/www/html \
 &&  chown -R www-data:www-data /var/www/html
 
 COPY ./db.ini /var/www/html/db.ini
