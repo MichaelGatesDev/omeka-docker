@@ -28,16 +28,17 @@ RUN docker-php-ext-install exif && \
 RUN curl -J -L -s -k \
     'https://github.com/omeka/Omeka/releases/download/v2.7.1/omeka-2.7.1.zip' \
     -o /var/www/omeka.zip \
-&&  unzip -q /var/www/omeka.zip -d /var/www/ \
-&&  rm /var/www/omeka.zip \
-&&  rm -rf /var/www/html \
-&&  mv /var/www/omeka-2.7.1 /var/www/html \
-&&  chown -R www-data:www-data /var/www/html
+    &&  unzip -q /var/www/omeka.zip -d /var/www/ \
+    &&  rm /var/www/omeka.zip \
+    &&  rm -rf /var/www/html \
+    &&  mv /var/www/omeka-2.7.1 /var/www/html \
+    &&  chown -R www-data:www-data /var/www/html
 
 COPY ./db.ini /var/www/html/db.ini
 COPY ./.htaccess /var/www/html/.htaccess
 COPY ./imagemagick-policy.xml /etc/ImageMagick/policy.xml
 
 VOLUME /var/www/html
+EXPOSE 80
 
 CMD ["apache2-foreground"]
