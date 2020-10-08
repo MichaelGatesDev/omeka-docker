@@ -19,10 +19,9 @@ services:
       - "8889:80"
 
   omeka:
+    restart: always
     depends_on:
       - db
     build: ./
-    image: michaelgatesdev/omeka
     ports:
       - "8888:80"
-    restart: always
