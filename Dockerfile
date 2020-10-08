@@ -39,6 +39,5 @@ COPY ./.htaccess /var/www/html/.htaccess
 COPY ./imagemagick-policy.xml /etc/ImageMagick/policy.xml
 
 VOLUME /var/www/html
-EXPOSE 80
 
 CMD ["apache2-foreground"]
