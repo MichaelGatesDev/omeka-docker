@@ -13,11 +13,14 @@ RUN apt-get -qq update && apt-get -qq -y --no-install-recommends install \
     libjpeg-dev \
     libmemcached-dev \
     zlib1g-dev \
+    libmagickwand-dev \
     imagemagick
 
 # install the PHP extensions we need
 RUN pecl install mcrypt-1.0.3 \
     && docker-php-ext-enable mcrypt
+RUN pecl install imagick-3.4.4 \
+    && docker-php-ext-enable imagick
 RUN docker-php-ext-install -j$(nproc) iconv \
     pdo pdo_mysql mysqli gd
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
